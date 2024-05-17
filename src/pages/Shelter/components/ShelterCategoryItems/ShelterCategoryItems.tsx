@@ -1,10 +1,8 @@
 import { useContext, useMemo, useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import { cva } from 'class-variance-authority';
-
+import { ChevronDown, ChevronUp, Minus, Plus } from 'lucide-react';
 import { IShelterCategoryItemsProps } from './types';
 import { cn, getSupplyPriorityProps } from '@/lib/utils';
-import { CircleStatus, Chip } from '@/components';
+import { CircleStatus } from '@/components';
 import { Button } from '@/components/ui/button';
 import { SupplyPriority } from '@/service/supply/types';
 import { SessionContext } from '@/contexts';
@@ -32,60 +30,93 @@ const ShelterCategoryItems = (props: IShelterCategoryItemsProps) => {
   const Icon = opened ? ChevronUp : ChevronDown;
   const btnLabel = opened ? 'Ver menos' : 'Ver todos';
 
-  const variants = cva('cursor-pointer', {
-    variants: {
-      variant: {
-        selected: 'border-4 border-blue-300',
-        default: 'border-4 border-gray-100',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
-    },
-  });
+  const [localTags, setLocalTags] = useState(tags);
+
+  const handleMinusClick = (idx: number) => {
+    const updatedTags = [...localTags];
+    updatedTags[idx].quantity = Math.max(0, (updatedTags[idx].quantity || 0) - 1);
+    setLocalTags(updatedTags);
+  };
+
+  const handlePlusClick = (idx: number) => {
+    const updatedTags = [...localTags];
+    updatedTags[idx].quantity = (updatedTags[idx].quantity || 0) + 1;
+    setLocalTags(updatedTags);
+  };
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex gap-2 items-center">
-        <CircleStatus className={circleClassName} />
-        <h3>
-          {label} ({tags.length})
-        </h3>
+      <div className="flex gap-2 items-center flex-wrap">
+        <div className='flex items-center gap-2'>
+          <CircleStatus className={circleClassName} />
+          <h3>
+            {label} ({tags.length})
+          </h3>
+        </div>
+
+        <Button variant="ghost"
+          className="gap-1 text-blue-600 hover:text-blue-500 active:text-blue-700
+          m-0 p-1 text-xs items-center
+        "
+        >
+          <Plus className="h-3 w-3 stroke-blue-600" />
+          Adicionar item
+        </Button>
       </div>
       <div className="flex gap-2 flex-wrap">
         {visibleSupplies.map((tag, idx) => {
-          const tagProps =
-            session &&
-            ['DistributionCenter', 'Admin'].includes(session.accessLevel)
-              ? {
-                  onClick: () => (onSelectTag ? onSelectTag(tag) : undefined),
-                  className: variants({
-                    className: circleClassName,
-                    variant: selectedTags.includes(tag)
-                      ? 'selected'
-                      : 'default',
-                  }),
-                }
-              : {
-                  className: circleClassName,
-                };
           return (
-            <div
+            <Badge
               key={idx}
-              className={cn('flex gap-x-1 relative', { 'mr-3': tag.quantity })}
+              className={cn(
+                circleClassName,
+                `pl-4 pr-1 items-center gap-4 h-10`,
+                session && ['DistributionCenter', 'Admin'].includes(session.accessLevel) &&
+                'cursor-pointer',
+                selectedTags.includes(tag)
+                  ? 'ring-2'
+                  : '',
+              )}
+              variant={'outline'}
             >
-              <Chip key={idx} label={tag.label} {...tagProps} />
+              <span
+                onClick={
+                  () => {
+                    session && ['DistributionCenter', 'Admin'].includes(session.accessLevel) &&
+                      onSelectTag ? onSelectTag(tag) : undefined
+                  }
+                }
+              >
+                {tag.label}
+              </span>
               {tag.quantity !== null &&
                 tag.quantity !== undefined &&
-                tag.quantity > 0 && (
-                  <Badge
-                    variant="default"
-                    className="absolute z-10 right-4 top-0 -translate-y-2 translate-x-full text-xs flex items-center justify-center w-7 h-6"
+                (
+                  <div
+                    className={cn(`${circleClassName}`, 'hover:bg-none h-8 w-20 px-4 text-xs gap-2 text-secondary flex items-center bg-primary rounded-full')}
                   >
-                    {tag.quantity > 99 ? '99+' : tag.quantity}
-                  </Badge>
+                    <Button
+                      name={`button-minus-${idx}`}
+                      variant="link"
+                      size={"icon"}
+                      className="m-0 p-0 curso hover:bg-none w-10"
+                      onClick={() => handleMinusClick(idx)}
+                  >
+                    <Minus className="h-3 w-3 stroke-red-400" />
+                  </Button>
+                  {tag.quantity}
+                  <Button
+                      name={`button-plus-${idx}`}
+                      variant="link"
+                      size={"icon"}
+                      className="m-0 p-0 curso hover:bg-none w-10"
+                      onClick={() => handlePlusClick(idx)}
+                    >
+                      <Plus className="h-3 w-3 stroke-emerald-400" />
+                    </Button>
+                  </div>
                 )}
-            </div>
+            </Badge>
           );
         })}
       </div>

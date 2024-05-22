@@ -11,6 +11,7 @@ import {
   PrivacyPolicy,
   AboutUs,
   Supporters,
+  CreateInstitution
 } from '@/pages';
 
 const Routes = () => {
@@ -24,6 +25,8 @@ const Routes = () => {
         path="/abrigo/:shelterId/item/cadastrar"
         element={<CreateSupply />}
       />
+      <Route path="/instituicao/cadastrar" element={<CreateInstitution />} />
+
       <Route path="/" element={<Home />} />
       <Route path="/entrar" element={<SignIn />} />
       <Route path="/politica-de-privacidade" element={<PrivacyPolicy />} />

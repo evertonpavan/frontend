@@ -54,7 +54,7 @@ const BurgerMenu = () => {
           />
           <BurguerMenuItem
             label="Cadastrar abrigo"
-            link="https://forms.gle/2S7L2gR529Dc8P3T9"
+            link="/instituicao/cadastrar"
             icon={<CirclePlus className="w-5 h-5" />}
             openExternal={true}
           />

@@ -65,27 +65,56 @@ const ShelterListView = React.forwardRef<HTMLDivElement, IShelterListViewProps>(
             </div>
           ))}
         </div>
-        <div className="flex flex-row">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex gap-2 items-center text-blue-500 hover:text-blue-600 active:text-blue-700"
-            onClick={onOpenModal}
-          >
-            <ListFilter className="h-5 w-5 stroke-blue-500" />
-            Filtros
-          </Button>
-          {searchParams.toString() && (
+        <div className="flex flex-row flex-wrap">
+          <div className='flex items-center'>
             <Button
               variant="ghost"
               size="sm"
               className="flex gap-2 items-center text-blue-500 hover:text-blue-600 active:text-blue-700"
-              onClick={onClearSearch}
+              onClick={onOpenModal}
             >
-              <CircleAlert className="h-5 w-5 stroke-blue-500" />
-              Limpar Filtros
+              <ListFilter className="h-5 w-5 stroke-blue-500" />
+              Filtros
             </Button>
-          )}
+            {searchParams.toString() && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex gap-2 items-center text-blue-500 hover:text-blue-600 active:text-blue-700"
+                onClick={onClearSearch}
+              >
+                <CircleAlert className="h-5 w-5 stroke-blue-500" />
+                Limpar Filtros
+              </Button>
+            )}
+          </div>
+          <div className='flex items-center flex-wrap gap-1 md:gap-2'>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs h-8 px-1 gap-2 items-center rounded-full sm:text-sm sm:px-3"
+              onClick={() => {}}
+            >
+              Aceita pets
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs h-8 px-3 gap-2 items-center rounded-full sm:text-sm"
+              onClick={() => {}}
+            >
+              Disponível
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs h-8 px-3 gap-2 items-center rounded-full sm:text-sm"
+              onClick={() => {}}
+            >
+              Precisa de voluntários
+            </Button>
+          </div>
         </div>
         <main ref={ref} className="flex flex-col gap-4" {...rest}>
           {loading ? (

@@ -144,6 +144,7 @@ const Home = () => {
         onOpenModal={() => setOpenModal(true)}
         onClearSearch={clearSearch}
         className="flex-1 p-4 max-w-4xl"
+        onSubmit={onSubmitFilterForm}
       />
       <Footer />
     </div>

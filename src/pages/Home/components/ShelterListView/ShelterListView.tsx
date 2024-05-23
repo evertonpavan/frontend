@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { IShelterListViewProps } from './types';
 import { useSearchParams } from 'react-router-dom';
 import { LoadingSkeleton } from '@/components/LoadingSkeleton';
+import { IFilterFormProps } from '../Filter/types';
 
 const ShelterListView = React.forwardRef<HTMLDivElement, IShelterListViewProps>(
   (props, ref) => {
@@ -28,10 +29,23 @@ const ShelterListView = React.forwardRef<HTMLDivElement, IShelterListViewProps>(
       onOpenModal,
       onClearSearch,
       filterData,
+      onSubmit,
       ...rest
     } = props;
 
     const [searchParams] = useSearchParams();
+
+    function handleQuickFilters(values: Partial<IFilterFormProps>) {
+      const defaultValues: IFilterFormProps = {
+        priority: 100,
+        search: '',
+        shelterStatus: ['available'],
+        supplyCategoryIds: [''],
+        supplyIds: [''],
+        cities: [''],
+      };
+      onSubmit({ ...defaultValues, ...values });
+    }
 
     return (
       <div className={cn(className, 'flex flex-col gap-2')}>
@@ -93,7 +107,7 @@ const ShelterListView = React.forwardRef<HTMLDivElement, IShelterListViewProps>(
               variant="outline"
               size="sm"
               className="text-xs h-8 px-1 gap-2 items-center rounded-full sm:text-sm sm:px-3"
-              onClick={() => {}}
+              onClick={() => ('')}
             >
               Aceita pets
             </Button>
@@ -102,7 +116,7 @@ const ShelterListView = React.forwardRef<HTMLDivElement, IShelterListViewProps>(
               variant="outline"
               size="sm"
               className="text-xs h-8 px-3 gap-2 items-center rounded-full sm:text-sm"
-              onClick={() => {}}
+              onClick={() => handleQuickFilters({ shelterStatus: ['available'] })}
             >
               Disponível
             </Button>
@@ -110,7 +124,7 @@ const ShelterListView = React.forwardRef<HTMLDivElement, IShelterListViewProps>(
               variant="outline"
               size="sm"
               className="text-xs h-8 px-3 gap-2 items-center rounded-full sm:text-sm"
-              onClick={() => {}}
+              onClick={() => ('')}
             >
               Precisa de voluntários
             </Button>

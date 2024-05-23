@@ -2,7 +2,7 @@ import { IUseSheltersData } from '@/hooks/useShelters/types';
 import { IFilterFormProps } from '../Filter/types';
 
 export interface IShelterListViewProps
-  extends React.ComponentPropsWithoutRef<'div'> {
+  extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onSubmit'> {
   count: number;
   data: IUseSheltersData[];
   loading?: boolean;
@@ -15,4 +15,5 @@ export interface IShelterListViewProps
   onFetchMoreData?: () => void;
   onSelectShelter?: (shelter: IUseSheltersData) => void;
   filterData: IFilterFormProps;
+  onSubmit: (values: IFilterFormProps) => void;
 }
